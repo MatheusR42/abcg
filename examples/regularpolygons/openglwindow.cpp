@@ -76,7 +76,7 @@ void OpenGLWindow::paintGL() {
 
   // Render
   abcg::glBindVertexArray(m_vao);
-  abcg::glDrawArrays(GL_TRIANGLE_FAN, 0, sides + 1);
+  abcg::glDrawArrays(GL_TRIANGLE_FAN, 0, sides + 2);
   abcg::glBindVertexArray(0);
 
   abcg::glUseProgram(0);
@@ -152,8 +152,8 @@ void OpenGLWindow::setupModel(int sides) {
   }
 
   // Duplicate second vertex
-  // positions.push_back(positions.at(1));
-  // colors.push_back(color2);
+  positions.push_back(positions.at(1));
+  colors.push_back(color2);
 
   // Generate VBO of positions
   abcg::glGenBuffers(1, &m_vboPositions);
