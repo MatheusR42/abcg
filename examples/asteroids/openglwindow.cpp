@@ -64,6 +64,9 @@ void OpenGLWindow::initializeGL() {
     throw abcg::Exception{abcg::Exception::Runtime("Cannot load font file")};
   }
 
+  // Create program to render the stars
+  m_starsProgram = createProgramFromFile(getAssetsPath() + "stars.vert",
+                                         getAssetsPath() + "stars.frag");
   // Create program to render the other objects
   m_objectsProgram = createProgramFromFile(getAssetsPath() + "objects.vert",
                                            getAssetsPath() + "objects.frag");
@@ -84,11 +87,12 @@ void OpenGLWindow::initializeGL() {
 void OpenGLWindow::restart() {
   m_gameData.m_state = State::Playing;
 
+  m_starLayers.initializeGL(m_starsProgram, 25);
   m_ship.initializeGL(m_objectsProgram);
 }
 
 void OpenGLWindow::update() {
-  float deltaTime{static_cast<float>(getDeltaTime())};
+  const float deltaTime{static_cast<float>(getDeltaTime())};
 
   // Wait 5 seconds before restarting
   if (m_gameData.m_state != State::Playing &&
@@ -98,6 +102,7 @@ void OpenGLWindow::update() {
   }
 
   m_ship.update(m_gameData, deltaTime);
+  m_starLayers.update(m_ship, deltaTime);
 }
 
 void OpenGLWindow::paintGL() {
@@ -106,6 +111,7 @@ void OpenGLWindow::paintGL() {
   abcg::glClear(GL_COLOR_BUFFER_BIT);
   abcg::glViewport(0, 0, m_viewportWidth, m_viewportHeight);
 
+  m_starLayers.paintGL();
   m_ship.paintGL(m_gameData);
 }
 
@@ -143,7 +149,9 @@ void OpenGLWindow::resizeGL(int width, int height) {
 }
 
 void OpenGLWindow::terminateGL() {
+  abcg::glDeleteProgram(m_starsProgram);
   abcg::glDeleteProgram(m_objectsProgram);
 
   m_ship.terminateGL();
+  m_starLayers.terminateGL();
 }

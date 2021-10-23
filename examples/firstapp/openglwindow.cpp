@@ -8,6 +8,10 @@ void OpenGLWindow::initializeGL() {
   auto windowSettings{getWindowSettings()};
   fmt::print("Initial window size: {}x{}\n", windowSettings.width,
              windowSettings.height);
+
+  // Create program to render the stars
+  m_starsProgram = createProgramFromFile(getAssetsPath() + "stars.vert",
+                                       getAssetsPath() + "stars.frag");
 }
 
 void OpenGLWindow::paintGL() {
