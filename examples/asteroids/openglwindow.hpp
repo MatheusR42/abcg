@@ -30,6 +30,7 @@ class OpenGLWindow : public abcg::OpenGLWindow {
   GameData m_gameData;
 
   Asteroids m_asteroids;
+  Bullets m_bullets;
   Ship m_ship;
   StarLayers m_starLayers;
 
